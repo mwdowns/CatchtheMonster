@@ -1,5 +1,11 @@
 import pygame, random, time, math
 
+KEY_W = 119
+KEY_S = 115
+KEY_A = 97
+KEY_D = 100
+ENTER = 13
+
 class Monster(object):
     def __init__(self, x, y):
         self.x = x
@@ -27,9 +33,9 @@ class Monster(object):
     def monsterMove(self):
         self.change_dir -= 1
 
-        if self.change_dir == 0:
-            self.direction = random.randint(0, 3)
+        if self.change_dir <= 0:
             self.change_dir = 120
+            self.direction = random.randint(0, 3)
             if self.direction == 0:
                 self.speed_x = 0
                 self.speed_y = 5
@@ -53,41 +59,40 @@ class Hero(object):
 
     def heroMove(self, event):
         if event.type == pygame.KEYDOWN:
-            if event.key == 119:
+            if event.key == KEY_W:
                 print "%d, %d" % (self.x, self.y)
-                self.speed_x = 0
+                # self.speed_x = 0
                 self.speed_y = -4
-            elif event.key == 115:
+            elif event.key == KEY_S:
                 print "%d, %d" % (self.x, self.y)
-                self.speed_x = 0
+                # self.speed_x = 0
                 self.speed_y = 4
-            elif event.key == 97:
+            elif event.key == KEY_A:
                 print "%d, %d" % (self.x, self.y)
                 self.speed_x = -4
-                self.speed_y = 0
-            elif event.key ==100:
+                # self.speed_y = 0
+            elif event.key == KEY_D:
                 print "%d, %d" % (self.x, self.y)
                 self.speed_x = 4
-                self.speed_y = 0
+                # self.speed_y = 0
 
         if event.type == pygame.KEYUP:
-            if event.key == 119:
+            if event.key == KEY_W:
+                print "%d, %d" % (self.x, self.y)
+                # self.speed_x = 0
+                self.speed_y = 0
+            elif event.key == KEY_S:
+                print "%d, %d" % (self.x, self.y)
+                # self.speed_x = 0
+                self.speed_y = 0
+            elif event.key == KEY_A:
                 print "%d, %d" % (self.x, self.y)
                 self.speed_x = 0
-                self.speed_y = 0
-            elif event.key == 115:
+                # self.speed_y = 0
+            elif event.key == KEY_D:
                 print "%d, %d" % (self.x, self.y)
                 self.speed_x = 0
-                self.speed_y = 0
-            elif event.key == 97:
-                print "%d, %d" % (self.x, self.y)
-                self.speed_x = 0
-                self.speed_y = 0
-            elif event.key ==100:
-                print "%d, %d" % (self.x, self.y)
-                self.speed_x = 0
-                self.speed_y = 0
-
+                # self.speed_y = 0
 
     def update(self):
         self.x += self.speed_x
@@ -108,13 +113,12 @@ class Hero(object):
             return True
 
 
-
-
 def main():
     # declare the size of the canvas
     width = 512
     height = 480
     blue_color = (97, 159, 182)
+    red_color = (255, 0, 0)
 
     # initialize the pygame framework
     pygame.init()
@@ -150,9 +154,7 @@ def main():
     dead = False
     while not stop_game:
         # look through user events fired
-        if hero.collides(monster) == True:
-            dead = True
-            win_sound.play()
+
         for event in pygame.event.get():
             ################################
             # PUT EVENT HANDLING CODE HERE #
@@ -178,10 +180,13 @@ def main():
 
         screen.blit(background_image, (0, 0))
         screen.blit(hero_image, (hero.x, hero.y))
+        if hero.collides(monster):
+            dead = True
+            win_sound.play()
         if dead == True:
             text = font.render("YOU WIN!!", True, (255, 0, 0))
             screen.blit(text, (200, 200))
-            text2 = font.render("Do you want to play again?", True, (255, 0, 0))
+            text2 = font.render("Do you want to play again?", True, red_color)
             screen.blit(text2, (90, 250))
         else:
             monster_image = pygame.image.load("images/monster.png").convert_alpha()
