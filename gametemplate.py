@@ -9,10 +9,24 @@ class Monster(object):
         self.change_dir = 1
         self.direction = 1
 
-    def monsterMove(self):
-        self.change_dir -= 1
+    def update(self):
         self.x += self.speed_x
         self.y += self.speed_y
+
+        if self.x > 512:
+            self.x = 0
+        if self.x < 0:
+            self.x = 512
+        if self.y < 0:
+            self.y = 480
+        if self.y > 480:
+            self.y = 0
+
+        self.monsterMove()
+
+    def monsterMove(self):
+        self.change_dir -= 1
+
         if self.change_dir == 0:
             self.direction = random.randint(0, 3)
             self.change_dir = 120
@@ -28,14 +42,7 @@ class Monster(object):
             else:
                 self.speed_x = -5
                 self.speed_y = 0
-        if self.x > 512:
-            self.x = 0
-        elif self.x < 0:
-            self.x = 512
-        elif self.y < 0:
-            self.y = 480
-        elif self.y > 480:
-            self.y = 0
+
 
 class Hero(object):
     def __init__(self, x, y):
@@ -161,7 +168,7 @@ def main():
         # PUT LOGIC TO UPDATE GAME STATE HERE #
         #######################################
 
-        monster.monsterMove()
+        monster.update()
         hero.update()
         # fill background color
         screen.fill(blue_color)
